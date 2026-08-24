@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vinil Beer — a rádio que toca clássicos e boas histórias</title>
+<meta name="description" content="Trilhas sonoras dos anos 80, 90 e 2000 e muita resenha pra acompanhar. Ouça a Vinil Beer ao vivo.">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Vinil Beer">
+<meta property="og:title" content="Vinil Beer — Rádio Web">
+<meta property="og:description" content="Trilhas sonoras dos anos 80, 90 e 2000 e muita resenha pra acompanhar.">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+<!-- ============ CABEÇALHO ============ -->
+<header class="header">
+  <div class="header__inner wrap">
+    <a class="logo" href="/" data-link aria-label="Vinil Beer — início">
+      <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="16" cy="16" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+      </svg>
+      <span class="logo__type">
+        <span class="logo__line1">Vinil</span>
+        <span class="logo__line2">Beer</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <a class="nav__link" href="/" data-link>Início</a>
+      <a class="nav__link" href="/programacao" data-link>Programação</a>
+      <a class="nav__link" href="/playlist" data-link>Playlist</a>
+      <a class="nav__link" href="/noticias" data-link>Notícias</a>
+      <a class="nav__link" href="/sobre" data-link>Sobre</a>
+      <a class="nav__link" href="/contato" data-link>Contato</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav-mobile">
+      <span class="sr-only">Abrir menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+
+  <nav class="nav-mobile" id="nav-mobile" hidden aria-label="Principal">
+    <a class="nav-mobile__link" href="/" data-link>Início</a>
+    <a class="nav-mobile__link" href="/programacao" data-link>Programação</a>
+    <a class="nav-mobile__link" href="/playlist" data-link>Playlist</a>
+    <a class="nav-mobile__link" href="/noticias" data-link>Notícias</a>
+    <a class="nav-mobile__link" href="/sobre" data-link>Sobre</a>
+    <a class="nav-mobile__link" href="/contato" data-link>Contato</a>
+  </nav>
+</header>
+
+<main id="conteudo">
+
+<!-- ============ VIEW: INÍCIO ============ -->
+<section class="view" data-view="home">
+
+  <div class="hero">
+    <div class="wrap hero__inner">
+      <div class="hero__text">
+        <h1 class="hero__title">
+          A rádio que<br>
+          <em>toca clássicos</em><br>
+          e boas histórias.
+        </h1>
+        <p class="hero__lead">
+          Trilhas sonoras dos anos 80, 90 e 2000 e muita resenha pra acompanhar.
+        </p>
+        <button class="btn-listen" type="button" data-play-trigger>
+          <span class="btn-listen__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </span>
+          <span class="btn-listen__labels">
+            <span class="btn-listen__main">Ouvir agora</span>
+            <span class="btn-listen__sub"><i class="dot" data-live-dot></i> Ao vivo</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Elemento assinatura: o disco só gira com o áudio no ar -->
+      <div class="turntable" aria-hidden="true">
+        <div class="record" data-record>
+          <div class="record__label"></div>
+          <div class="record__pin"></div>
+        </div>
+        <div class="tonearm"><span class="tonearm__head"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section wrap">
+    <div class="section__head">
+      <h2 class="section__title">Programação</h2>
+      <a class="link-more" href="/programacao" data-link>ver todos
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="carousel">
+      <button class="carousel__nav carousel__nav--prev" type="button" data-scroll="-1">
+        <span class="sr-only">Programas anteriores</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <ul class="carousel__track" id="programas-home" data-scroller></ul>
+      <button class="carousel__nav carousel__nav--next" type="button" data-scroll="1">
+        <span class="sr-only">Próximos programas</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="section section--tight wrap">
+    <div class="grid-2">
+
+      <div class="card now-playing">
+        <p class="eyebrow eyebrow--gold">Tocando agora</p>
+        <div class="now-playing__body">
+          <div class="now-playing__art">
+            <img src="assets/img/placeholder-album.svg" alt="" data-np-art>
+            <span class="tag-live">Ao vivo</span>
+          </div>
+          <div class="now-playing__meta">
+            <p class="now-playing__artist" data-np-artist>—</p>
+            <p class="now-playing__track" data-np-title>—</p>
+            <div class="wave wave--sm" data-wave></div>
+          </div>
+        </div>
+        <div class="now-playing__controls">
+          <button class="btn-round" type="button" data-play-trigger>
+            <span class="sr-only">Ouvir ao vivo</span>
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+          </button>
+          <svg class="icon-mini" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/></svg>
+          <div class="bar"><span class="bar__fill"></span></div>
+          <svg class="icon-mini" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4M3 7h4l10 10h4M3 17h4M17 21l4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section__head section__head--inner">
+          <h2 class="section__title section__title--sm">Playlist recente</h2>
+          <a class="link-more" href="/playlist" data-link>ver completa</a>
+        </div>
+        <ul class="playlist" id="playlist-home"></ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section section--tight wrap">
+    <ul class="features" id="features"></ul>
+  </div>
+
+  <div class="section section--tight wrap">
+    <div class="grid-side">
+      <div>
+        <div class="section__head">
+          <h2 class="section__title section__title--sm">Últimas resenhas</h2>
+          <a class="link-more" href="/noticias" data-link>ver todas</a>
+        </div>
+        <ul class="reviews" id="resenhas-home"></ul>
+      </div>
+
+      <div class="card about">
+        <div>
+          <h2 class="section__title section__title--sm">Sobre a Vinil Beer</h2>
+          <p class="about__text" data-about-text></p>
+        </div>
+        <div class="about__foot">
+          <a class="btn" href="/sobre" data-link>Saiba mais</a>
+          <svg class="about__mug" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h11v11a2 2 0 01-2 2H7a2 2 0 01-2-2V8zM16 10h2a2 2 0 012 2v2a2 2 0 01-2 2h-2M7 8V5a2 2 0 012-2h3a2 2 0 012 2v3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ VIEW: PROGRAMAÇÃO ============ -->
+<section class="view" data-view="programacao" hidden>
+  <div class="section wrap">
+    <h1 class="page-title">Programação</h1>
+    <p class="page-lead">A grade da semana inteira. Escolha um programa para ver a descrição.</p>
+    <ul class="grid-cards" id="programas-todos"></ul>
+  </div>
+</section>
+
+<!-- ============ VIEW: PROGRAMA (detalhe) ============ -->
+<section class="view" data-view="programa" hidden>
+  <div class="section wrap" id="programa-detalhe"></div>
+</section>
+
+<!-- ============ VIEW: PLAYLIST ============ -->
+<section class="view" data-view="playlist" hidden>
+  <div class="section wrap">
+    <h1 class="page-title">Playlist</h1>
+    <p class="page-lead">O histórico do que tocou na rádio, da faixa mais recente para a mais antiga.</p>
+    <div class="card card--narrow">
+      <ul class="playlist" id="playlist-completa"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: NOTÍCIAS ============ -->
+<section class="view" data-view="noticias" hidden>
+  <div class="section wrap">
+    <h1 class="page-title">Notícias e resenhas</h1>
+    <p class="page-lead">O que rolou nos programas, comentado por quem estava lá.</p>
+    <ul class="reviews reviews--grid" id="resenhas-todas"></ul>
+  </div>
+</section>
+
+<!-- ============ VIEW: RESENHA (detalhe) ============ -->
+<section class="view" data-view="resenha" hidden>
+  <div class="section wrap" id="resenha-detalhe"></div>
+</section>
+
+<!-- ============ VIEW: SOBRE ============ -->
+<section class="view" data-view="sobre" hidden>
+  <div class="section wrap">
+    <div class="prose">
+      <h1 class="page-title">Sobre a Vinil Beer</h1>
+      <p data-about-text></p>
+      <p>Aqui a trilha é certeira e o papo é reto. A gente toca o que marcou os anos 80, 90 e 2000 e conversa sobre isso sem pressa e sem roteiro — do jeito que se conversa numa mesa de bar.</p>
+      <p>Chega mais e faz parte dessa comunidade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: CONTATO ============ -->
+<section class="view" data-view="contato" hidden>
+  <div class="section wrap">
+    <div class="form-wrap">
+      <h1 class="page-title">Fale com a gente</h1>
+      <p class="page-lead">Mande seu recado, pedido de música ou sugestão de pauta. Ele pode aparecer no ar.</p>
+
+      <div class="card" id="form-card">
+        <form class="form" id="form-recado" novalidate>
+          <div class="field">
+            <label class="eyebrow" for="nome">Seu nome</label>
+            <input class="input" id="nome" name="nome" type="text" maxlength="60" placeholder="Como quer ser chamado no ar" autocomplete="name">
+          </div>
+          <div class="field">
+            <label class="eyebrow" for="recado">Seu recado</label>
+            <textarea class="input" id="recado" name="recado" rows="4" maxlength="500" placeholder="Pedido de música, sugestão de pauta, o que quiser"></textarea>
+          </div>
+          <p class="form__error" id="form-erro" role="alert" hidden></p>
+          <button class="btn" type="submit" id="form-submit">Enviar recado</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: 404 ============ -->
+<section class="view" data-view="404" hidden>
+  <div class="section wrap">
+    <h1 class="page-title">Fora do ar</h1>
+    <p class="page-lead">Essa página não existe. Volte para a home e continue ouvindo.</p>
+    <a class="btn" href="/" data-link>Ir para a home</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <span class="logo">
+        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="16" cy="16" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+          <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+        </svg>
+        <span class="logo__type">
+          <span class="logo__line1">Vinil</span>
+          <span class="logo__line2">Beer</span>
+        </span>
+      </span>
+      <p class="footer__copy">
+        &copy; <span data-ano></span> Vinil Beer Rádio Web<br>
+        Todos os direitos reservados.
+      </p>
+    </div>
+    <div class="footer__social">
+      <span class="eyebrow">Siga a gente</span>
+      <ul class="social" id="social"></ul>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PLAYER FIXO ============ -->
+<!-- Fica fora das views: é o que impede o áudio de cortar na navegação -->
+<div class="player">
+  <audio id="audio" preload="none"></audio>
+
+  <div class="wrap player__inner">
+    <div class="player__disc" data-record aria-hidden="true"><span></span></div>
+
+    <div class="player__meta">
+      <p class="eyebrow eyebrow--gold"><i class="dot" data-live-dot></i> Ao vivo</p>
+      <p class="player__track" id="player-track">Toque para ouvir</p>
+    </div>
+
+    <button class="btn-round btn-round--lg" type="button" id="btn-play">
+      <span class="sr-only">Ouvir ao vivo</span>
+      <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+      <svg class="icon-spinner" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 019 9" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    </button>
+
+    <div class="wave wave--lg" data-wave></div>
+
+    <div class="player__volume">
+      <button class="icon-btn" type="button" id="btn-mute">
+        <span class="sr-only">Silenciar</span>
+        <svg class="icon-vol" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zM16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="icon-mute" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zM17 10l4 4M21 10l-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <input class="range" id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/player.js"></script>
+<script src="js/views.js"></script>
+<script src="js/router.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
