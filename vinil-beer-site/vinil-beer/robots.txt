@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://vinilbeer.com.br/sitemap.xml
