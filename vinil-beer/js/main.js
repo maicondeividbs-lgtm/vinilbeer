@@ -18,13 +18,13 @@
   }
 
   /* ---- setas do carrossel ---- */
-  function ligarCarrossel() {
+  function ligarSetas() {
     document.querySelectorAll("[data-scroll]").forEach((botao) => {
       botao.addEventListener("click", () => {
         const trilho = botao.closest(".carousel").querySelector("[data-scroller]");
         trilho.scrollBy({
           left: Number(botao.dataset.scroll) * trilho.clientWidth * 0.8,
-          behavior: "smooth"
+          behavior: window.VBUI.semMovimento ? "auto" : "smooth"
         });
       });
     });
@@ -56,6 +56,9 @@
 
       try { localStorage.setItem(CHAVE, JSON.stringify(salvos)); } catch { /* modo privado */ }
       pintar();
+
+      const titulo = botao.closest(".playlist__item").querySelector(".playlist__title").textContent;
+      window.VBUI.avisar(salvos.includes(id) ? `${titulo} salva nos favoritos` : `${titulo} removida dos favoritos`);
     });
 
     pintar();
@@ -97,6 +100,8 @@
             <button class="form-ok__again" type="button" id="novo-recado">Mandar outro</button>
           </div>`;
 
+        window.VBUI.avisar("Recado enviado com sucesso");
+
         document.getElementById("novo-recado").addEventListener("click", () => {
           location.reload();
         });
@@ -118,8 +123,10 @@
     window.VBPlayer.iniciar();
     window.VBRouter.iniciar();
 
+    window.VBUI.iniciar();
+
     ligarMenu();
-    ligarCarrossel();
+    ligarSetas();
     ligarFavoritos();
     ligarFormulario();
   });

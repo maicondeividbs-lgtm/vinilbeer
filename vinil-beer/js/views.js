@@ -26,6 +26,23 @@ window.VBViews = (function () {
     return new Date(iso).toLocaleDateString("pt-BR");
   }
 
+  /* Descobre se um programa está no ar neste exato momento.
+     É a informação mais útil da página inteira para quem chega:
+     "o que está tocando agora?" */
+  function estaNoAr(programa) {
+    if (!programa.grade) return false;
+
+    const agora = new Date();
+    const diaHoje = agora.getDay();
+    if (!programa.grade.dias.includes(diaHoje)) return false;
+
+    const minutosAgora = agora.getHours() * 60 + agora.getMinutes();
+    const [hi, mi] = programa.grade.inicio.split(":").map(Number);
+    const [hf, mf] = programa.grade.fim.split(":").map(Number);
+
+    return minutosAgora >= hi * 60 + mi && minutosAgora < hf * 60 + mf;
+  }
+
   const ICONES = {
     lupa:       '<circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
     calendario: '<rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -46,10 +63,14 @@ window.VBViews = (function () {
   /* ---- blocos ---- */
 
   function cartaoPrograma(p, comDescricao = false) {
+    const noAr = estaNoAr(p);
     return `
-      <a class="card-program" href="/programacao/${esc(p.slug)}" data-link>
-        <div class="card-program__cover" style="background-image:url('${esc(p.capa)}')"
-             role="img" aria-label="Capa do programa ${esc(p.titulo)}"></div>
+      <a class="card-program${noAr ? " esta-no-ar" : ""}" href="/programacao/${esc(p.slug)}" data-link>
+        <div class="card-program__media">
+          <div class="card-program__cover" style="background-image:url('${esc(p.capa)}')"
+               role="img" aria-label="Capa do programa ${esc(p.titulo)}"></div>
+          ${noAr ? '<span class="selo-no-ar"><i></i>No ar</span>' : ""}
+        </div>
         <div class="card-program__body">
           <h3 class="card-program__title">${esc(p.titulo)}</h3>
           <p class="card-program__time">${esc(p.dias)} &middot; ${esc(p.horario)}</p>
@@ -73,9 +94,11 @@ window.VBViews = (function () {
       </li>`;
   }
 
-  function itemPlaylist(faixa, indice) {
+  function itemPlaylist(faixa) {
+    const busca = `${faixa.artista} ${faixa.titulo}`.toLowerCase();
+    const chave = busca.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     return `
-      <li class="playlist__item">
+      <li class="playlist__item" data-busca="${esc(busca)}">
         <span class="playlist__badge">${svg("play")}</span>
         <p class="playlist__text">
           <span class="playlist__artist">${esc(faixa.artista)}</span>
@@ -83,7 +106,7 @@ window.VBViews = (function () {
           <span class="playlist__title">${esc(faixa.titulo)}</span>
         </p>
         <span class="playlist__time">${tempoAtras(faixa.tocadaEm)}</span>
-        <button class="playlist__like" type="button" data-like="${indice}" aria-pressed="false">
+        <button class="playlist__like" type="button" data-like="${esc(chave)}" aria-pressed="false">
           <span class="sr-only">Favoritar ${esc(faixa.titulo)}</span>
           ${svg("coracao")}
         </button>

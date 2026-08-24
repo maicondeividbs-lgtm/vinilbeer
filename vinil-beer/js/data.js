@@ -12,6 +12,7 @@ window.VB_DATA = {
   programas: [
     {
       slug: "trilhas-fracassadas",
+      grade: { dias: [1,2,3,4,5], inicio: "12:00", fim: "13:00" },
       titulo: "Trilhas Fracassadas",
       dias: "Seg a Sex",
       horario: "12h",
@@ -21,6 +22,7 @@ window.VB_DATA = {
     },
     {
       slug: "vinil-beer-classicos",
+      grade: { dias: [1,2,3,4,5], inicio: "18:00", fim: "20:00" },
       titulo: "Vinil Beer Clássicos",
       dias: "Seg a Sex",
       horario: "18h",
@@ -30,6 +32,7 @@ window.VB_DATA = {
     },
     {
       slug: "resenha-de-quinta",
+      grade: { dias: [4], inicio: "20:00", fim: "22:00" },
       titulo: "Resenha de Quinta",
       dias: "Qui",
       horario: "20h",
@@ -39,6 +42,7 @@ window.VB_DATA = {
     },
     {
       slug: "flashback-weekend",
+      grade: { dias: [6], inicio: "15:00", fim: "18:00" },
       titulo: "Flashback Weekend",
       dias: "Sáb",
       horario: "15h",

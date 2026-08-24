@@ -74,6 +74,10 @@ window.VBRouter = (function () {
     /* Leitores de tela precisam ser avisados de que a tela mudou —
        numa SPA o navegador não anuncia isso sozinho. */
     document.getElementById("conteudo").focus({ preventScroll: true });
+
+    /* O observador de rolagem não dispara para o que já está visível
+       quando a tela troca — revelamos na mão. */
+    if (window.VBUI) window.VBUI.revelarTelaAtual();
   }
 
   function iniciar() {

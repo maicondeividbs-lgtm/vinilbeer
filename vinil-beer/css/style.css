@@ -63,6 +63,10 @@ h1, h2, h3, h4 {
   letter-spacing: .01em;
 }
 
+/* O atributo hidden precisa vencer qualquer display declarado depois.
+   Sem isto, esconder algo por JS não funciona em elementos flex/grid. */
+[hidden] { display: none !important; }
+
 p { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
 a { color: inherit; text-decoration: none; }
@@ -937,4 +941,344 @@ textarea.input { resize: vertical; min-height: 96px; }
     transition-duration: .01ms !important;
   }
   html { scroll-behavior: auto; }
+}
+
+/* =========================================================
+   20. MOVIMENTO E INTERAÇÃO
+   Nenhuma animação decorativa: cada uma comunica um estado
+   (tocando, salvo, há mais conteúdo) ou orienta o olho.
+   ========================================================= */
+
+/* ---- 20.1 Revelar ao rolar ---- */
+/* Escopado em .js de propósito: sem JavaScript, nada disto se aplica
+   e o conteúdo aparece normalmente. Conteúdo nunca depende de animação. */
+.js [data-revelar] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
+}
+.js [data-revelar].revelado {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- 20.2 Braço do toca-discos ----
+   Em repouso fica recolhido. Ao tocar, desce sobre o disco.
+   É a tradução visual mais direta de "está no ar". */
+.tonearm {
+  transform: rotate(38deg);
+  transition: transform 1.1s cubic-bezier(.34, 1.3, .64, 1);
+}
+.is-live .tonearm { transform: rotate(20deg); }
+
+/* O disco ganha brilho sutil na borda quando toca */
+.record {
+  transition: box-shadow .6s var(--ease);
+}
+.is-live .record {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6),
+              0 0 0 1px rgba(242, 183, 5, .3),
+              0 0 40px rgba(242, 183, 5, .12);
+}
+
+/* ---- 20.3 Pulso do "ao vivo" ----
+   Só pulsa quando realmente está no ar. Parado, fica cinza e imóvel. */
+@keyframes pulso {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, .55); }
+  70%      { box-shadow: 0 0 0 6px rgba(229, 72, 77, 0); }
+}
+.is-live .dot { animation: pulso 2s ease-out infinite; }
+
+/* ---- 20.4 Onda sonora ----
+   Parada, é uma linha estática. Tocando, as barras respiram.
+   O atraso escalonado evita o efeito "todas juntas", que parece falso. */
+@keyframes respirar {
+  0%, 100% { transform: scaleY(.45); }
+  50%      { transform: scaleY(1); }
+}
+.is-live .wave__bar {
+  animation: respirar 1.1s ease-in-out infinite;
+  transform-origin: center;
+}
+.wave__bar:nth-child(4n+1) { animation-delay: 0s; }
+.wave__bar:nth-child(4n+2) { animation-delay: .18s; }
+.wave__bar:nth-child(4n+3) { animation-delay: .36s; }
+.wave__bar:nth-child(4n)   { animation-delay: .54s; }
+
+/* ---- 20.5 Cartões ----
+   Capa dá um leve zoom e a borda acende. Comunica "isto é clicável". */
+.card-program__media {
+  position: relative;
+  overflow: hidden;
+}
+.card-program__cover,
+.card-post__cover {
+  transition: transform .5s var(--ease);
+}
+.card-program:hover .card-program__cover,
+.card-post:hover .card-post__cover {
+  transform: scale(1.06);
+}
+.card-program:hover,
+.card-post:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+}
+
+/* ---- 20.6 Selo "no ar" ----
+   A informação mais útil da página: qual programa está passando agora. */
+.selo-no-ar {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--live);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.selo-no-ar i {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulso-branco 2s ease-out infinite;
+}
+@keyframes pulso-branco {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .7); }
+  70%      { box-shadow: 0 0 0 5px rgba(255, 255, 255, 0); }
+}
+
+.card-program.esta-no-ar {
+  border-color: rgba(229, 72, 77, .45);
+}
+
+/* ---- 20.7 Carrossel ----
+   Sombra na borda avisa que o conteúdo continua. Sem isso, o usuário
+   não sabe que dá pra rolar — o problema clássico de carrossel. */
+.carousel::before,
+.carousel::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 8px;
+  width: 56px;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease);
+}
+.carousel::before {
+  left: 0;
+  background: linear-gradient(to right, var(--ink), transparent);
+}
+.carousel::after {
+  right: 0;
+  background: linear-gradient(to left, var(--ink), transparent);
+}
+.carousel.tem-antes::before  { opacity: 1; }
+.carousel.tem-depois::after  { opacity: 1; }
+
+.carousel__nav:disabled {
+  opacity: .25;
+  cursor: default;
+}
+.carousel__nav:disabled:hover {
+  color: var(--ash);
+  border-color: var(--line);
+}
+
+.carousel__track { cursor: grab; }
+.carousel__track.arrastando {
+  cursor: grabbing;
+  scroll-snap-type: none;   /* o snap briga com o arrasto manual */
+  scroll-behavior: auto;
+}
+.carousel__track.arrastando * { pointer-events: none; }
+
+/* ---- 20.8 Playlist ----
+   A linha inteira reage ao hover, não só o botão. Alvo maior, menos mira. */
+.playlist__item {
+  border-radius: 5px;
+  padding-inline: 8px;
+  margin-inline: -8px;
+  transition: background .2s var(--ease);
+}
+.playlist__item:hover { background: rgba(242, 183, 5, .045); }
+
+.playlist__badge { transition: transform .2s var(--ease); }
+.playlist__item:hover .playlist__badge { transform: scale(1.12); }
+
+@keyframes coracao-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.45); }
+  100% { transform: scale(1.1); }
+}
+.playlist__like.is-liked { animation: coracao-pop .38s var(--ease); }
+
+.playlist__vazia {
+  padding-block: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ash-dim);
+}
+
+/* ---- 20.9 Busca ---- */
+.busca {
+  position: relative;
+  max-width: 620px;
+  margin-block: 26px 16px;
+}
+.busca__icone {
+  position: absolute;
+  left: 13px; top: 50%;
+  width: 17px; height: 17px;
+  transform: translateY(-50%);
+  color: var(--ash-dim);
+  pointer-events: none;
+}
+.busca__campo { padding-left: 40px; }
+.busca__campo::-webkit-search-cancel-button { filter: invert(.6); }
+
+/* ---- 20.10 Menu ----
+   Traço dourado que cresce sob o item ativo. Marca onde você está
+   sem depender só da cor (que exclui quem não distingue bem tons). */
+.nav__link {
+  position: relative;
+  padding-block: 6px;
+}
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .28s var(--ease);
+}
+.nav__link:hover::after     { transform: scaleX(.4); }
+.nav__link.is-active::after { transform: scaleX(1); }
+
+/* ---- 20.11 Cabeçalho ao rolar ---- */
+.header {
+  transition: box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.header.rolado {
+  background: rgba(11, 9, 8, .98);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .45);
+}
+
+/* ---- 20.12 Voltar ao topo ---- */
+.ao-topo {
+  position: fixed;
+  right: 20px;
+  bottom: calc(var(--player-h) + 18px);
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border: 1px solid var(--line-hover);
+  border-radius: 50%;
+  background: rgba(20, 16, 13, .94);
+  backdrop-filter: blur(6px);
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease), background .2s var(--ease);
+}
+.ao-topo.visivel {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.ao-topo:hover { background: var(--gold); color: var(--ink); }
+.ao-topo svg { width: 18px; height: 18px; }
+
+/* ---- 20.13 Avisos ---- */
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--player-h) + 18px);
+  z-index: 60;
+  max-width: calc(100vw - 40px);
+  padding: 11px 20px;
+  border: 1px solid var(--line-hover);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .55);
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+}
+.aviso.visivel {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---- 20.14 Troca de tela ----
+   Fade curto ao navegar. Numa página única, sem isso a troca é
+   abrupta demais e o usuário não percebe que algo mudou. */
+@keyframes entrar-tela {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.view:not([hidden]) {
+  animation: entrar-tela .32s var(--ease);
+}
+
+/* ---- 20.15 Botões ---- */
+.btn, .btn-listen, .btn-round {
+  will-change: transform;
+}
+.btn:active, .btn-round:active { transform: scale(.96); }
+.btn-listen:active { transform: scale(.98); }
+
+/* Botão principal ganha um halo quando está tocando */
+.is-live .btn-round--lg {
+  box-shadow: 0 0 0 4px rgba(242, 183, 5, .16);
+}
+
+/* ---- 20.16 Player em telas pequenas ----
+   Sem espaço para tudo. Prioridade: o que está tocando e o play. */
+@media (max-width: 619px) {
+  .player__inner { gap: 10px; }
+  .player__meta { flex: 1; min-width: 0; }
+  .player__volume { margin-left: 0; }
+  .ao-topo { right: 14px; width: 38px; height: 38px; }
+  .aviso { white-space: normal; text-align: center; }
+}
+
+/* ---- 20.17 Alvos de toque ----
+   Mínimo de 44px em telas de toque, recomendação de acessibilidade
+   que também reduz erro de clique em qualquer tela. */
+@media (pointer: coarse) {
+  .playlist__like {
+    width: 44px; height: 44px;
+    padding: 13px;
+    margin-right: -13px;
+  }
+  .nav-mobile__link { padding-block: 16px; }
+  .icon-btn { width: 44px; height: 44px; padding: 12px; }
+}
+
+/* ---- 20.18 Movimento reduzido ----
+   Quem pediu menos movimento no sistema recebe a interface parada.
+   O conteúdo continua todo visível — nada depende da animação. */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-revelar] { opacity: 1 !important; transform: none !important; }
+  .view:not([hidden]) { animation: none; }
+  .is-live .wave__bar,
+  .is-live .dot,
+  .selo-no-ar i { animation: none; }
+  .card-program:hover .card-program__cover,
+  .card-post:hover .card-post__cover { transform: none; }
+  .tonearm { transition: none; }
 }

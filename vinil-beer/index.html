@@ -18,6 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
+<!-- Marca que o JS está ativo. Se falhar, o conteúdo aparece
+     normalmente em vez de ficar invisível para sempre. -->
+<script>document.documentElement.classList.add("js");</script>
+
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -97,12 +101,12 @@
           <div class="record__label"></div>
           <div class="record__pin"></div>
         </div>
-        <div class="tonearm"><span class="tonearm__head"></span></div>
+        <div class="tonearm" data-tonearm><span class="tonearm__head"></span></div>
       </div>
     </div>
   </div>
 
-  <div class="section wrap">
+  <div class="section wrap" data-revelar>
     <div class="section__head">
       <h2 class="section__title">Programação</h2>
       <a class="link-more" href="/programacao" data-link>ver todos
@@ -122,7 +126,7 @@
     </div>
   </div>
 
-  <div class="section section--tight wrap">
+  <div class="section section--tight wrap" data-revelar>
     <div class="grid-2">
 
       <div class="card now-playing">
@@ -161,11 +165,11 @@
     </div>
   </div>
 
-  <div class="section section--tight wrap">
+  <div class="section section--tight wrap" data-revelar>
     <ul class="features" id="features"></ul>
   </div>
 
-  <div class="section section--tight wrap">
+  <div class="section section--tight wrap" data-revelar>
     <div class="grid-side">
       <div>
         <div class="section__head">
@@ -209,8 +213,14 @@
   <div class="section wrap">
     <h1 class="page-title">Playlist</h1>
     <p class="page-lead">O histórico do que tocou na rádio, da faixa mais recente para a mais antiga.</p>
+    <div class="busca">
+      <svg class="busca__icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input class="input busca__campo" id="filtro-playlist" type="search"
+             placeholder="Buscar por artista ou música" aria-label="Buscar na playlist">
+    </div>
     <div class="card card--narrow">
       <ul class="playlist" id="playlist-completa"></ul>
+      <p class="playlist__vazia" id="playlist-vazia" hidden>Nenhuma faixa encontrada.</p>
     </div>
   </div>
 </section>
@@ -304,6 +314,15 @@
   </div>
 </footer>
 
+<!-- Volta ao topo. Aparece só depois de uma tela e meia de rolagem. -->
+<button class="ao-topo" id="ao-topo" type="button">
+  <span class="sr-only">Voltar ao topo</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<!-- Confirmações curtas de ação. Lidas por leitores de tela. -->
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
 <!-- ============ PLAYER FIXO ============ -->
 <!-- Fica fora das views: é o que impede o áudio de cortar na navegação -->
 <div class="player">
@@ -341,6 +360,7 @@
 <script src="js/data.js"></script>
 <script src="js/player.js"></script>
 <script src="js/views.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/router.js"></script>
 <script src="js/main.js"></script>
 </body>

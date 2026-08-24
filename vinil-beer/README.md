@@ -21,6 +21,7 @@ js/
   data.js           ⭐ Programas, playlist, resenhas — o conteúdo
   player.js         Player de áudio
   views.js          Monta as listas na tela
+  ui.js             Animações, carrossel, busca, avisos
   router.js         Troca de tela sem recarregar
   main.js           Liga tudo
 assets/img/         Capas e ícones
@@ -36,6 +37,22 @@ Os dois arquivos com ⭐ são os que você mexe no dia a dia. O resto é motor.
 **Por que "pausar" desliga a fonte em vez de pausar.** Numa transmissão ao vivo, pausar de verdade faria o buffer continuar acumulando; ao voltar, o ouvinte estaria atrasado em relação ao que está no ar. Por isso o botão descarrega e reconecta.
 
 **Por que a onda sonora não reage ao áudio.** Ler o áudio de verdade exige `AnalyserNode`, que precisa de CORS liberado no servidor de streaming. Só dá para configurar depois que o stream existir. Por ora ela só muda de cor quando está tocando.
+
+## Movimento e interação
+
+Regra adotada: **nenhuma animação decorativa**. Cada movimento comunica um estado ou orienta o olho.
+
+| Movimento | O que comunica |
+|---|---|
+| Braço do toca-discos desce | A rádio está no ar |
+| Barras da onda respiram | Áudio tocando (para quando pausa) |
+| Bolinha vermelha pulsa | Transmissão ao vivo |
+| Seções sobem ao rolar | Dá ritmo à página e sinaliza que há mais abaixo |
+| Sombra na borda do carrossel | Existe conteúdo fora da tela |
+| Coração dá um pulo | Sua ação foi registrada |
+| Traço dourado no menu | Onde você está |
+
+Tudo isso desliga sozinho para quem ativou "reduzir movimento" no sistema operacional. O conteúdo continua inteiro — nada depende da animação para ser lido.
 
 ## O que falta
 
@@ -54,4 +71,4 @@ Os dois arquivos com ⭐ são os que você mexe no dia a dia. O resto é motor.
 
 ## Testado
 
-Navegação entre todas as telas, botões voltar/avançar do navegador, formulário de recados (validação, envio e sucesso), favoritar faixa, menu mobile, e o comportamento sem stream configurado. Layout conferido em 1280px e 390px. Nenhum erro de JavaScript.
+Busca da playlist (filtro e estado vazio), selo "no ar" no horário certo, revelação ao rolar com e **sem** JavaScript, favoritar com chave estável, avisos, voltar ao topo, atalho de teclado. Navegação entre todas as telas, botões voltar/avançar do navegador, formulário de recados (validação, envio e sucesso), favoritar faixa, menu mobile, e o comportamento sem stream configurado. Layout conferido em 1280px e 390px. Nenhum erro de JavaScript.
