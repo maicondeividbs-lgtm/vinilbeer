@@ -89,9 +89,7 @@
       enviar.textContent = "Enviando...";
 
       try {
-        /* Fase do Supabase: aqui entra o insert na tabela `recados`
-           com status "pendente", para a equipe moderar antes de ir ao ar. */
-        await new Promise((r) => setTimeout(r, 600));
+        await window.VBApi.enviarRecado(nome, recado);
 
         cartao.innerHTML = `
           <div class="form-ok">
@@ -114,8 +112,22 @@
     });
   }
 
-  /* ---- partida ---- */
-  document.addEventListener("DOMContentLoaded", () => {
+  /* ---- partida ----
+     Ordem importa: buscamos os dados primeiro, montamos a tela depois.
+     Se o banco não responder, VBApi devolve os dados locais e a
+     sequência segue igual — o visitante não percebe diferença. */
+  document.addEventListener("DOMContentLoaded", async () => {
+    document.body.classList.add("carregando");
+
+    try {
+      const { origem } = await window.VBApi.carregar();
+      console.info("Dados carregados de:", origem);
+    } catch (erro) {
+      console.warn("Carga de dados falhou por completo:", erro);
+    }
+
+    document.body.classList.remove("carregando");
+
     window.VBViews.montarOndas();
     window.VBViews.montarHome();
     window.VBViews.montarPaginasFixas();
@@ -129,5 +141,7 @@
     ligarSetas();
     ligarFavoritos();
     ligarFormulario();
+
+    window.VBApi.acompanharPlaylist();
   });
 })();

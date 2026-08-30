@@ -9,13 +9,18 @@ create table public.programas (
   id           uuid primary key default uuid_generate_v4(),
   slug         text not null unique,
   titulo       text not null,
-  dias         text,
-  horario      text,
+  dias         text,          -- texto exibido: "Seg a Sex"
+  horario      text,          -- texto exibido: "18h"
   apresentador text,
   descricao    text,
   capa_url     text,
   ordem        int  not null default 0,
   ativo        boolean not null default true,
+  -- Grade real, usada para calcular o selo "NO AR".
+  -- grade_dias: 0=domingo ... 6=sabado. Ex.: {1,2,3,4,5}
+  grade_dias   smallint[],
+  grade_inicio time,
+  grade_fim    time,
   criado_em    timestamptz not null default now()
 );
 
@@ -101,3 +106,29 @@ create policy "admin le"      on public.recados for select using (public.eh_admi
 create policy "admin modera"  on public.recados for update using (public.eh_admin());
 
 create policy "le proprio perfil" on public.perfis for select using (auth.uid() = id or public.eh_admin());
+
+
+-- =============================================================
+-- DADOS INICIAIS
+-- Roda junto e já deixa o site com o conteúdo atual.
+-- =============================================================
+insert into public.programas
+  (slug, titulo, dias, horario, apresentador, descricao, ordem, grade_dias, grade_inicio, grade_fim)
+values
+  ('trilhas-fracassadas', 'Trilhas Fracassadas', 'Seg a Sex', '12h', 'Rafael',
+   'As músicas que quase deram certo. Uma hora de hits que pararam no meio do caminho, com o contexto de quem viveu a época.',
+   1, '{1,2,3,4,5}', '12:00', '13:00'),
+  ('vinil-beer-classicos', 'Vinil Beer Clássicos', 'Seg a Sex', '18h', 'Rafa & Convidados',
+   'O bloco principal da casa. Clássicos dos anos 80, 90 e 2000 no fim da tarde, com convidado toda semana.',
+   2, '{1,2,3,4,5}', '18:00', '20:00'),
+  ('resenha-de-quinta', 'Resenha de Quinta', 'Qui', '20h', 'Rafa & Galera',
+   'Papo aberto sobre música, cinema e o que mais aparecer. Sem roteiro e sem enrolação.',
+   3, '{4}', '20:00', '22:00'),
+  ('flashback-weekend', 'Flashback Weekend', 'Sáb', '15h', 'Só pedradas!',
+   'Sábado à tarde é só pedrada. Bloco contínuo, sem intervalo, pra deixar tocando.',
+   4, '{6}', '15:00', '18:00');
+
+update public.configuracoes set
+  sobre = 'A Vinil Beer nasceu da paixão por música boa, cerveja gelada e conversas que ficam. Aqui a trilha é certeira e o papo é reto.',
+  redes = '{"youtube":"https://youtube.com/@vinilbeer"}'::jsonb
+where id = 1;

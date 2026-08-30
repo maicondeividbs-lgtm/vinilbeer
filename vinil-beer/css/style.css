@@ -1282,3 +1282,130 @@ textarea.input { resize: vertical; min-height: 96px; }
   .card-post:hover .card-post__cover { transform: none; }
   .tonearm { transition: none; }
 }
+
+/* =========================================================
+   21. ÍCONES ANIMADOS
+   Regra: o ícone reage ao passar o mouse ou ao estado do sistema.
+   Nada anima em loop sem motivo — ícone piscando sozinho vira ruído
+   e rouba atenção do que importa.
+   ========================================================= */
+
+/* Base: as partes internas herdam a suavização */
+.feature__icon *,
+.social svg *,
+.about__mug * {
+  transition: transform .4s var(--ease), opacity .4s var(--ease);
+  transform-origin: center;
+}
+
+/* ---- 21.1 Lupa: a lente cresce, o cabo acompanha ---- */
+.feature:hover .vb-lente { transform: scale(1.14); }
+.feature:hover .vb-cabo  { transform: translate(1.5px, 1.5px); }
+
+/* ---- 21.2 Calendário: as argolas balançam, o dia acende ---- */
+@keyframes argola {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1.5px); }
+}
+.feature:hover .vb-argola     { animation: argola .5s var(--ease); }
+.feature:hover .vb-argola--2  { animation-delay: .08s; }
+.feature:hover .vb-dia {
+  transform: translateX(8px);
+  transition-duration: .45s;
+}
+
+/* ---- 21.3 Microfone: ondas saem dos lados ----
+   Paradas por padrão. Só emitem no hover — é a metáfora certa
+   para "resenha", que é fala. */
+.vb-onda { opacity: 0; }
+@keyframes onda-sai {
+  0%   { opacity: 0; transform: scaleX(.4); }
+  50%  { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1.25); }
+}
+.feature:hover .vb-onda {
+  animation: onda-sai 1.1s var(--ease) infinite;
+}
+.feature:hover .vb-onda--2 { animation-delay: .15s; }
+
+/* ---- 21.4 Avião: decola e deixa rastro ---- */
+@keyframes decolar {
+  0%   { transform: translate(0, 0); }
+  45%  { transform: translate(5px, -5px); opacity: 0; }
+  46%  { transform: translate(-4px, 4px); opacity: 0; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+.feature:hover .vb-aviao  { animation: decolar .75s var(--ease); }
+.feature:hover .vb-rastro { opacity: .5; transition-delay: .1s; }
+
+/* ---- 21.5 Caneca: as bolhas sobem ----
+   Esta é a única em loop contínuo do site. É o ícone da marca,
+   fica num canto discreto e não compete com nada. */
+@keyframes bolha-sobe {
+  0%   { transform: translateY(3px); opacity: 0; }
+  25%  { opacity: .6; }
+  100% { transform: translateY(-7px); opacity: 0; }
+}
+.about__mug .vb-bolha {
+  animation: bolha-sobe 2.6s ease-in-out infinite;
+}
+.about__mug .vb-bolha--2 { animation-delay: .8s; }
+.about__mug .vb-bolha--3 { animation-delay: 1.6s; }
+
+.about__mug {
+  display: block;
+  width: 46px; height: 46px;
+  color: rgba(242, 183, 5, .32);
+  flex-shrink: 0;
+  transition: color .3s var(--ease), transform .3s var(--ease);
+}
+.about:hover .about__mug {
+  color: rgba(242, 183, 5, .6);
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* ---- 21.6 Redes sociais ---- */
+.social a {
+  transition: color .25s var(--ease), transform .25s var(--ease);
+}
+.social a:hover { transform: translateY(-3px); }
+
+.social a:hover .vb-lente   { transform: scale(1.18); }
+.social a:hover .vb-play-yt { transform: translateX(1.5px) scale(1.1); }
+.social a:hover .vb-nota    { transform: translate(1px, -1.5px); }
+
+/* Balõezinhos do WhatsApp sobem em sequência, como quem digita */
+@keyframes digitando {
+  0%, 60%, 100% { transform: translateY(0); opacity: .55; }
+  30%           { transform: translateY(-2.5px); opacity: 1; }
+}
+.social a:hover .vb-bolha    { animation: digitando .9s var(--ease) infinite; }
+.social a:hover .vb-bolha--2 { animation-delay: .15s; }
+.social a:hover .vb-bolha--3 { animation-delay: .3s; }
+
+/* ---- 21.7 Faixa de destaques: o card inteiro reage ---- */
+.feature {
+  transition: background .25s var(--ease);
+}
+.feature:hover { background: rgba(242, 183, 5, .04); }
+.feature__icon { transition: transform .3s var(--ease); }
+.feature:hover .feature__icon { transform: scale(1.08); }
+
+/* ---- 21.8 Play da playlist: vira triângulo maior no hover ---- */
+.playlist__badge svg { transition: transform .25s var(--ease); }
+.playlist__item:hover .playlist__badge svg { transform: scale(1.15); }
+
+/* ---- 21.9 Movimento reduzido ----
+   Ícones ficam estáticos, mas continuam legíveis: nenhuma informação
+   depende do movimento. */
+@media (prefers-reduced-motion: reduce) {
+  .vb-onda { opacity: .6; }
+  .about__mug .vb-bolha,
+  .feature:hover .vb-onda,
+  .feature:hover .vb-aviao,
+  .feature:hover .vb-argola,
+  .social a:hover .vb-bolha { animation: none; }
+  .feature__icon *,
+  .social svg *,
+  .about__mug * { transition: none; }
+}

@@ -43,18 +43,53 @@ window.VBViews = (function () {
     return minutosAgora >= hi * 60 + mi && minutosAgora < hf * 60 + mf;
   }
 
+  /* Ícones. As partes animáveis levam classe própria (vb-*) para o CSS
+     poder mexer só nelas — girar a agulha sem girar o disco, por exemplo.
+     Sem classe = parte estática. */
   const ICONES = {
-    lupa:       '<circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-    calendario: '<rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-    microfone:  '<rect x="9" y="2" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 11a7 7 0 0014 0M12 18v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-    aviao:      '<path d="M21 3L3 10l7 3 3 7 8-17z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
-    coracao:    '<path d="M12 20s-7-4.5-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.5-7 9-7 9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
-    play:       '<path d="M8 5v14l11-7z" fill="currentColor"/>',
-    instagram:  '<rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/>',
-    youtube:    '<rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>',
-    facebook:   '<path d="M14 8h2.5V4.5H14A4 4 0 0010 8.5V11H7.5v3.5H10V21h3.5v-6.5H16L16.5 11H13.5V8.8c0-.5.3-.8.5-.8z" fill="currentColor"/>',
-    tiktok:     '<path d="M14 3v11.5a3.5 3.5 0 11-3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 3c.6 2.6 2.3 4.2 5 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
-    whatsapp:   '<path d="M3.5 20.5l1.3-4.3A8 8 0 1112 20a8 8 0 01-4.1-1.1l-4.4 1.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+    lupa: `<circle class="vb-lente" cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+           <path class="vb-cabo" d="M20 20l-4.2-4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`,
+
+    calendario: `<rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                 <path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/>
+                 <path class="vb-argola" d="M8 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                 <path class="vb-argola vb-argola--2" d="M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                 <circle class="vb-dia" cx="8" cy="15" r="1.6" fill="currentColor"/>`,
+
+    microfone: `<rect x="9.5" y="2.5" width="5" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path class="vb-onda" d="M3.4 7.6a5 5 0 000 4.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path class="vb-onda vb-onda--2" d="M20.6 7.6a5 5 0 010 4.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`,
+
+    aviao: `<path class="vb-aviao" d="M21 3L3 10l7 3 3 7 8-17z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path class="vb-rastro" d="M2 18h5M2 21h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0"/>`,
+
+    coracao: '<path d="M12 20s-7-4.5-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.5-7 9-7 9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+
+    play: '<path d="M8 5v14l11-7z" fill="currentColor"/>',
+
+    caneca: `<path d="M5 8h11v11a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+             <path d="M16 10h2a2 2 0 012 2v2a2 2 0 01-2 2h-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+             <circle class="vb-bolha" cx="8.5" cy="15" r="1.1" fill="currentColor" opacity=".55"/>
+             <circle class="vb-bolha vb-bolha--2" cx="11.5" cy="17" r=".9" fill="currentColor" opacity=".45"/>
+             <circle class="vb-bolha vb-bolha--3" cx="13.5" cy="14" r="1.2" fill="currentColor" opacity=".5"/>`,
+
+    instagram: `<rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle class="vb-lente" cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/>`,
+
+    youtube: `<rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+              <path class="vb-play-yt" d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>`,
+
+    facebook: '<path d="M14 8h2.5V4.5H14A4 4 0 0010 8.5V11H7.5v3.5H10V21h3.5v-6.5H16L16.5 11H13.5V8.8c0-.5.3-.8.5-.8z" fill="currentColor"/>',
+
+    tiktok: `<path d="M14 3v11.5a3.5 3.5 0 11-3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+             <path class="vb-nota" d="M14 3c.6 2.6 2.3 4.2 5 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`,
+
+    whatsapp: `<path d="M3.5 20.5l1.3-4.3A8 8 0 1112 20a8 8 0 01-4.1-1.1l-4.4 1.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+               <circle class="vb-bolha" cx="9" cy="12" r="1" fill="currentColor"/>
+               <circle class="vb-bolha vb-bolha--2" cx="12" cy="12" r="1" fill="currentColor"/>
+               <circle class="vb-bolha vb-bolha--3" cx="15" cy="12" r="1" fill="currentColor"/>`
   };
 
   const svg = (nome, classe = "") =>
@@ -161,6 +196,9 @@ window.VBViews = (function () {
         </a></li>`).join("");
 
     document.querySelector("[data-ano]").textContent = new Date().getFullYear();
+
+    const caneca = document.getElementById("icone-caneca");
+    if (caneca) caneca.innerHTML = svg("caneca");
   }
 
   /* ---- telas de detalhe (montadas sob demanda) ---- */
@@ -230,8 +268,19 @@ window.VBViews = (function () {
     });
   }
 
+  /* Redesenha só as listas que dependem da playlist. Usado quando
+     chega faixa nova do banco, sem recarregar a página. */
+  function remontarPlaylists() {
+    const home = document.getElementById("playlist-home");
+    const tudo = document.getElementById("playlist-completa");
+    if (home) home.innerHTML = D().playlist.slice(0, 5).map(itemPlaylist).join("");
+    if (tudo) tudo.innerHTML = D().playlist.map(itemPlaylist).join("");
+    document.dispatchEvent(new CustomEvent("vb:listas-atualizadas"));
+  }
+
   return {
     montarHome,
+    remontarPlaylists,
     montarPaginasFixas,
     montarPrograma,
     montarResenha,

@@ -21,6 +21,7 @@ js/
   data.js           ⭐ Programas, playlist, resenhas — o conteúdo
   player.js         Player de áudio
   views.js          Monta as listas na tela
+  api.js            ⭐ Conversa com o Supabase
   ui.js             Animações, carrossel, busca, avisos
   router.js         Troca de tela sem recarregar
   main.js           Liga tudo
@@ -53,6 +54,43 @@ Regra adotada: **nenhuma animação decorativa**. Cada movimento comunica um est
 | Traço dourado no menu | Onde você está |
 
 Tudo isso desliga sozinho para quem ativou "reduzir movimento" no sistema operacional. O conteúdo continua inteiro — nada depende da animação para ser lido.
+
+## Banco de dados (Supabase)
+
+O site funciona **com ou sem** banco. Enquanto `supabaseUrl` e `supabaseAnonKey` estiverem vazios em `js/config.js`, ele usa o conteúdo de `js/data.js`. Preenchidos, passa a ler do Supabase automaticamente.
+
+Se o banco cair ou uma consulta falhar, o site volta sozinho para os dados locais e continua no ar. O visitante nunca vê página quebrada.
+
+### Já está ligado
+
+As credenciais do projeto `mqmwvoddagjdyglsbqxx` estão em `js/config.js`.
+
+Para verificar se o banco está respondendo, cole no navegador (troque CHAVE pela `anon` do `config.js`):
+
+```
+https://mqmwvoddagjdyglsbqxx.supabase.co/rest/v1/programas?select=*&apikey=CHAVE
+```
+
+Uma lista de programas em JSON = funcionando. `{"message":"relation ... does not exist"}` = o `schema.sql` ainda não foi rodado.
+
+### Como ligar (para outro projeto)
+
+1. Crie um projeto em supabase.com
+2. SQL Editor → cole o conteúdo de `supabase/schema.sql` → Run
+3. Settings → API → copie **Project URL** e a chave **anon public**
+4. Cole os dois em `js/config.js`
+
+A chave `anon` é pública por natureza — pode ficar no código. Quem protege os dados são as políticas de segurança (RLS) do `schema.sql`: qualquer um lê programas e playlist, ninguém escreve, e recados podem ser enviados mas não lidos pelo navegador.
+
+### O que passa a funcionar
+
+| Recurso | Comportamento |
+|---|---|
+| Programas, playlist, resenhas | Vêm do banco |
+| Formulário de recados | Grava de verdade, com status "pendente" |
+| Playlist ao vivo | Atualiza sozinha a cada 20s, sem recarregar |
+| URL do stream | Configurável pelo banco, sem mexer no código |
+| Textos e redes sociais | Editáveis pelo banco |
 
 ## O que falta
 

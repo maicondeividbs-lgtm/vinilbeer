@@ -19,9 +19,13 @@ window.VB_CONFIG = {
   /* De quanto em quanto tempo consultar a faixa atual (ms) */
   nowPlayingInterval: 20000,
 
-  /* Preenchido na Fase 3 (Supabase) */
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  /* Banco de dados.
+     A chave abaixo é a "anon" (pública) — pode ficar no código.
+     Quem protege os dados são as políticas de segurança (RLS)
+     definidas em supabase/schema.sql.
+     A chave service_role NUNCA deve aparecer aqui. */
+  supabaseUrl: "https://mqmwvoddagjdyglsbqxx.supabase.co",
+  supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xbXd2b2RkYWdqZHlnbHNicXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNzQ3MTEsImV4cCI6MjEwMzY1MDcxMX0.rbinlq5x5uoN10pdzWz-Yqv1YKC3Vhabr6DCA12HG6Y",
 
   social: {
     instagram: "#",
