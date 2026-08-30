@@ -1,0 +1,392 @@
+/* =========================================================
+   Painel de administração.
+   Reaproveita os tokens de css/style.css. Aqui a densidade é
+   maior e o contraste mais firme: é tela de trabalho, não vitrine.
+   ========================================================= */
+
+.pagina-admin {
+  padding-bottom: 0;   /* não há player fixo no painel */
+  background: var(--ink);
+}
+.pagina-admin.com-modal { overflow: hidden; }
+
+/* ---------- LOGIN ---------- */
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+.login__caixa {
+  width: 100%;
+  max-width: 360px;
+  padding: 34px 30px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.logo--login { margin-bottom: 22px; color: var(--gold); }
+.login__titulo {
+  margin-bottom: 22px;
+  font-size: 26px;
+  letter-spacing: .08em;
+}
+
+/* ---------- ESTRUTURA ---------- */
+.painel__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink-soft);
+}
+.painel__topo .logo { color: var(--gold); }
+
+.painel__usuario {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ash);
+}
+.painel__link {
+  color: var(--ash);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color .2s var(--ease);
+}
+.painel__link:hover { color: var(--gold); }
+.painel__sair {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--ash);
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.painel__sair:hover { color: var(--gold); border-color: var(--line-hover); }
+
+/* ---------- ABAS ---------- */
+.abas {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 0 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink-soft);
+  scrollbar-width: none;
+}
+.abas::-webkit-scrollbar { display: none; }
+
+.aba {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 13px 16px;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-display);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--ash);
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.aba:hover { color: var(--bone); }
+.aba.is-ativa { color: var(--gold); border-bottom-color: var(--gold); }
+
+.contador {
+  display: grid;
+  place-items: center;
+  min-width: 19px; height: 19px;
+  padding-inline: 5px;
+  border-radius: 999px;
+  background: var(--live);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---------- CORPO ---------- */
+.painel__corpo {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 28px 22px 60px;
+}
+
+.secao__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.secao__topo h2 {
+  font-size: 21px;
+  letter-spacing: .07em;
+}
+.secao__nota {
+  margin-bottom: 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ash-dim);
+}
+
+.btn--sm {
+  padding: 8px 18px;
+  font-size: 11px;
+}
+.btn--fantasma {
+  background: transparent;
+  border: 1px solid var(--line-hover);
+  color: var(--gold);
+}
+.btn--fantasma:hover { background: rgba(242, 183, 5, .08); opacity: 1; }
+
+/* ---------- LISTA ---------- */
+.lista { display: grid; gap: 10px; }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 17px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .2s var(--ease);
+}
+.item:hover { border-color: var(--line-hover); }
+.item--compacto { padding-block: 11px; }
+
+.item__principal { min-width: 0; flex: 1; }
+.item__titulo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  letter-spacing: .03em;
+}
+.item__meta {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--gold);
+}
+.item__texto {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ash);
+}
+.item__texto--recado {
+  padding: 10px 13px;
+  border-left: 2px solid var(--line-hover);
+  background: rgba(0, 0, 0, .25);
+  border-radius: 0 4px 4px 0;
+}
+
+.marca {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.marca--on   { background: rgba(242, 183, 5, .16); color: var(--gold); }
+.marca--off  { background: rgba(162, 152, 138, .14); color: var(--ash); }
+.marca--live { background: var(--live); color: #fff; }
+
+.item__acoes {
+  display: flex;
+  gap: 7px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.acao {
+  padding: 6px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--ash);
+  white-space: nowrap;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.acao:hover { color: var(--gold); border-color: var(--line-hover); }
+.acao--ok:hover     { color: #4ade80; border-color: rgba(74, 222, 128, .5); background: rgba(74, 222, 128, .08); }
+.acao--perigo:hover { color: var(--live); border-color: rgba(229, 72, 77, .5); background: rgba(229, 72, 77, .08); }
+
+.vazio {
+  padding: 34px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ash-dim);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------- FILTROS ---------- */
+.filtros { display: flex; gap: 6px; }
+.filtro {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--ash);
+  transition: all .2s var(--ease);
+}
+.filtro.is-ativo {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- FORMULÁRIOS ---------- */
+.rotulo {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ash);
+}
+.ajuda {
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--ash-dim);
+}
+.field--linha {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.field--linha .rotulo { margin-bottom: 0; }
+.field--linha input[type="checkbox"] {
+  width: 17px; height: 17px;
+  accent-color: var(--gold);
+}
+
+.form--largo { max-width: 560px; }
+
+.grupo {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.grupo legend { padding-inline: 8px; }
+
+.grade-2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.dias { display: flex; flex-wrap: wrap; gap: 6px; }
+.dia { cursor: pointer; }
+.dia input { position: absolute; opacity: 0; pointer-events: none; }
+.dia span {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--ash);
+  transition: all .2s var(--ease);
+}
+.dia input:checked + span {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+}
+.dia input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ---------- JANELA ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.modal__fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .72);
+  backdrop-filter: blur(3px);
+}
+.modal__caixa {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line-hover);
+  border-radius: 10px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, .7);
+  animation: modal-entra .24s var(--ease);
+}
+@keyframes modal-entra {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+.modal__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal__topo h3 { font-size: 19px; letter-spacing: .06em; }
+.modal__fechar {
+  width: 30px; height: 30px;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ash);
+  transition: color .2s var(--ease);
+}
+.modal__fechar:hover { color: var(--gold); }
+
+.modal__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+.modal__acoes .btn { justify-self: auto; }
+
+/* ---------- AVISOS ---------- */
+.pagina-admin .aviso { bottom: 22px; }
+.aviso--erro {
+  border-color: rgba(229, 72, 77, .55);
+  color: #ffb4b6;
+}
+
+/* ---------- TELAS PEQUENAS ---------- */
+@media (max-width: 620px) {
+  .item { flex-direction: column; gap: 12px; }
+  .item__acoes { width: 100%; }
+  .secao__topo { align-items: flex-start; }
+  .painel__topo { padding-inline: 16px; }
+  .abas { padding-inline: 16px; }
+  .painel__corpo { padding-inline: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal__caixa { animation: none; }
+}

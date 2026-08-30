@@ -12,16 +12,19 @@ Uma ressalva: abrindo assim (via `file://`), a navegação pelo menu não funcio
 
 ```
 index.html          Todas as telas do site
+admin.html          Painel de administração (/admin)
 vercel.json         Manda toda URL para o index.html (essencial para a navegação)
 robots.txt
 css/
-  style.css         Folha única, dividida em 19 blocos comentados
+  style.css         Folha única, dividida em blocos comentados
+  admin.css         Estilos do painel
 js/
   config.js         ⭐ Stream, redes sociais, chaves — o que você vai editar
   data.js           ⭐ Programas, playlist, resenhas — o conteúdo
   player.js         Player de áudio
   views.js          Monta as listas na tela
   api.js            ⭐ Conversa com o Supabase
+  admin.js          Lógica do painel
   ui.js             Animações, carrossel, busca, avisos
   router.js         Troca de tela sem recarregar
   main.js           Liga tudo
@@ -91,6 +94,26 @@ A chave `anon` é pública por natureza — pode ficar no código. Quem protege 
 | Playlist ao vivo | Atualiza sozinha a cada 20s, sem recarregar |
 | URL do stream | Configurável pelo banco, sem mexer no código |
 | Textos e redes sociais | Editáveis pelo banco |
+
+## Painel de administração
+
+Fica em **/admin**. Permite editar programação, publicar resenhas, registrar faixas, moderar recados e configurar o stream — tudo sem tocar em código.
+
+### Liberar o primeiro acesso
+
+1. Supabase → **Authentication → Users → Add user** (e-mail e senha, marque "Auto Confirm User")
+2. SQL Editor, trocando pelo seu e-mail:
+
+```sql
+update public.perfis set admin = true
+where id = (select id from auth.users where email = 'SEU@EMAIL.COM');
+```
+
+Sem o passo 2 o login funciona mas o painel recusa a entrada — é assim de propósito.
+
+### Sobre a segurança
+
+Esconder botão não protege nada. Quem decide o que cada conta pode fazer é o banco, pelas políticas de RLS. Uma conta sem `admin = true` que tentasse escrever direto pela API seria recusada pelo servidor, não pelo navegador.
 
 ## O que falta
 

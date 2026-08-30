@@ -132,3 +132,83 @@ update public.configuracoes set
   sobre = 'A Vinil Beer nasceu da paixão por música boa, cerveja gelada e conversas que ficam. Aqui a trilha é certeira e o papo é reto.',
   redes = '{"youtube":"https://youtube.com/@vinilbeer"}'::jsonb
 where id = 1;
+
+
+-- =============================================================
+-- ADMINISTRAÇÃO
+-- Cria o perfil automaticamente quando alguém se cadastra.
+-- Ninguém nasce admin: a promoção é manual, por SQL (ver abaixo).
+-- =============================================================
+create or replace function public.criar_perfil()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.perfis (id, nome, admin)
+  values (new.id, coalesce(new.raw_user_meta_data->>'nome', new.email), false)
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists ao_criar_usuario on auth.users;
+create trigger ao_criar_usuario
+  after insert on auth.users
+  for each row execute function public.criar_perfil();
+
+-- Recados: o admin também precisa poder apagar.
+drop policy if exists "admin apaga" on public.recados;
+create policy "admin apaga" on public.recados for delete using (public.eh_admin());
+
+-- =============================================================
+-- COMO CRIAR O PRIMEIRO ADMINISTRADOR
+--
+-- 1. No Supabase: Authentication > Users > Add user
+--    Preencha e-mail e senha, e MARQUE "Auto Confirm User".
+--
+-- 2. Volte ao SQL Editor e rode a linha abaixo, trocando o e-mail:
+--
+--    update public.perfis set admin = true
+--    where id = (select id from auth.users where email = 'seu@email.com');
+--
+-- 3. Pronto. Entre em /admin no site com esse e-mail e senha.
+-- =============================================================
+
+
+-- =============================================================
+-- ACESSO AO PAINEL
+-- =============================================================
+
+-- Toda conta criada ganha automaticamente um perfil (sem permissão
+-- de admin). Sem isto, a função eh_admin() não encontraria a linha.
+create or replace function public.criar_perfil()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.perfis (id, nome, admin)
+  values (new.id, coalesce(new.raw_user_meta_data->>'nome', new.email), false)
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists ao_criar_usuario on auth.users;
+create trigger ao_criar_usuario
+  after insert on auth.users
+  for each row execute function public.criar_perfil();
+
+-- Perfis já existentes (criados antes deste gatilho) entram agora.
+insert into public.perfis (id, nome, admin)
+select id, email, false from auth.users
+on conflict (id) do nothing;
+
+-- -------------------------------------------------------------
+-- PARA LIBERAR SEU ACESSO:
+-- 1. Authentication > Users > Add user (com e-mail e senha)
+-- 2. Rode a linha abaixo trocando pelo seu e-mail:
+--
+-- update public.perfis set admin = true
+-- where id = (select id from auth.users where email = 'SEU@EMAIL.COM');
+-- -------------------------------------------------------------
+
+-- O painel precisa listar programas inativos e resenhas ainda não
+-- publicadas — coisas que a política de leitura pública esconde.
+create policy "admin ve tudo" on public.programas for select using (public.eh_admin());
+create policy "admin ve tudo" on public.resenhas  for select using (public.eh_admin());
