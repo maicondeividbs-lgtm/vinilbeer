@@ -5,15 +5,20 @@
    ========================================================= */
 window.VB_CONFIG = {
 
-  /* URL do stream de áudio.
-     Vazio = o botão de play aparece desabilitado, sem quebrar nada.
-     Preencha quando o serviço de streaming for definido. */
+  /* Endereço do áudio em si.
+     Vazio = o botão de play fica desabilitado, sem quebrar nada.
+     No Zeno.FM tem o formato https://stream.zeno.fm/SEU_MOUNT
+     Também dá para preencher pelo painel, em /admin. */
   streamUrl: "",
 
-  /* Endpoint que devolve a faixa atual (JSON).
-     Vazio = usa o último registro conhecido em data.js.
-     No Azuracast é algo como:
-     https://SEU-SERVIDOR/api/nowplaying/vinilbeer */
+  /* Endereço que informa a faixa tocando agora.
+     Vazio = mostra o último registro conhecido, sem atualizar sozinho.
+
+     Zeno.FM:    https://api.zeno.fm/mounts/metadata/subscribe/SEU_MOUNT
+     AzuraCast:  https://SEU-SERVIDOR/api/nowplaying/vinilbeer
+
+     O código detecta qual é pelo endereço e usa o método certo.
+     Também dá para preencher pelo painel, em /admin. */
   nowPlayingUrl: "",
 
   /* De quanto em quanto tempo consultar a faixa atual (ms) */

@@ -115,6 +115,28 @@ Sem o passo 2 o login funciona mas o painel recusa a entrada — é assim de pro
 
 Esconder botão não protege nada. Quem decide o que cada conta pode fazer é o banco, pelas políticas de RLS. Uma conta sem `admin = true` que tentasse escrever direto pela API seria recusada pelo servidor, não pelo navegador.
 
+## Streaming
+
+O player entende dois formatos e detecta sozinho pelo endereço:
+
+| Serviço | Formato | O que o site consegue |
+|---|---|---|
+| AzuraCast e compatíveis | JSON, consulta a cada 20s | Faixa atual **e** playlist recente automática |
+| Zeno.FM | Server-Sent Events | Faixa atual em tempo real |
+
+Ambos os endereços se configuram em **/admin → Configurações**, sem tocar em código.
+
+### Testar sem contratar nada
+
+A demo pública do AzuraCast serve para validar o caminho completo:
+
+```
+Stream:        https://demo.azuracast.com/listen/azuratest_radio/radio.mp3
+Tocando agora: https://demo.azuracast.com/api/nowplaying/1
+```
+
+É banda de terceiros, destinada a avaliação. Use para testar e **apague os campos depois** — não deixe no ar.
+
 ## O que falta
 
 1. **Stream de áudio.** Sem ele o botão de play aparece desabilitado com o aviso "Stream ainda não configurado" — nada quebra. Quando o serviço for escolhido, preencha `streamUrl` em `js/config.js`.

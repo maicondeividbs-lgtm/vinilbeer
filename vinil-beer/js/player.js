@@ -80,35 +80,128 @@ window.VBPlayer = (function () {
     pintarEstado();
   }
 
-  /* ---- metadados da faixa atual ---- */
-  async function buscarFaixaAtual() {
-    const url = window.VB_CONFIG.nowPlayingUrl;
-    if (!url) return;
+  /* ---- metadados da faixa atual ----
+     Dois formatos, porque os serviços não combinaram entre si:
 
+     · Zeno.FM  → Server-Sent Events. Uma conexão fica aberta e o
+                  servidor empurra a faixa nova assim que ela troca.
+     · AzuraCast e afins → JSON por consulta periódica.
+
+     Detectamos pelo endereço e usamos o caminho certo. Trocar de
+     serviço depois não exige mexer aqui. */
+
+  function aplicarFaixa(artista, titulo, capa) {
+    window.VBViews.atualizarTocandoAgora({
+      artista: artista || "Vinil Beer",
+      titulo: titulo || "Ao vivo",
+      capa: capa || "assets/img/placeholder-album.svg"
+    });
+  }
+
+  /* O Zeno manda tudo numa string só: "Artista - Música".
+     Nem sempre tem o hífen — quando não tem, o texto inteiro
+     vira o título e evitamos inventar um artista. */
+  function separarArtistaMusica(texto) {
+    const partes = String(texto).split(" - ");
+    if (partes.length < 2) return { artista: "", titulo: texto.trim() };
+    return {
+      artista: partes[0].trim(),
+      titulo: partes.slice(1).join(" - ").trim()
+    };
+  }
+
+  function escutarSSE(url) {
+    let fonte;
+    try {
+      fonte = new EventSource(url);
+    } catch (erro) {
+      console.warn("Metadados ao vivo indisponíveis:", erro);
+      return;
+    }
+
+    fonte.onmessage = (evento) => {
+      try {
+        const dados = JSON.parse(evento.data);
+        const bruto = dados.streamTitle || dados.title;
+        if (!bruto) return;
+        const { artista, titulo } = separarArtistaMusica(bruto);
+        aplicarFaixa(artista, titulo, null);
+      } catch {
+        /* Batimento de conexão ou linha vazia: ignorar sem alarde. */
+      }
+    };
+
+    /* O EventSource reconecta sozinho. Só registramos, para não
+       poluir o console a cada oscilação de rede. */
+    fonte.onerror = () => console.debug("Metadados: reconectando…");
+  }
+
+  /* Monta a lista de recentes a partir do histórico do serviço.
+     Se o formato vier diferente do esperado, saímos sem mexer em nada —
+     é melhor mostrar a lista antiga do que uma lista quebrada. */
+  function aplicarHistorico(historico, tocandoAgora) {
+    if (!Array.isArray(historico) || !historico.length) return;
+
+    const paraFaixa = (item) => ({
+      artista: item.song.artist || "—",
+      titulo: item.song.title || item.song.text || "—",
+      capa: item.song.art || null,
+      tocadaEm: new Date((item.played_at || 0) * 1000).toISOString()
+    });
+
+    try {
+      const lista = [];
+      if (tocandoAgora && tocandoAgora.song) lista.push(paraFaixa(tocandoAgora));
+      historico.forEach((item) => { if (item && item.song) lista.push(paraFaixa(item)); });
+
+      if (!lista.length) return;
+      window.VB_DATA.playlist = lista;
+      window.VBViews.remontarPlaylists();
+    } catch (erro) {
+      console.warn("Histórico em formato inesperado:", erro.message);
+    }
+  }
+
+  async function consultarJSON(url) {
     try {
       const resposta = await fetch(url, { cache: "no-store" });
       if (!resposta.ok) return;
       const json = await resposta.json();
 
-      /* Formato do Azuracast. Outro serviço = ajustar só estas duas linhas. */
+      /* Formato AzuraCast */
       const atual = json.now_playing && json.now_playing.song;
       if (!atual) return;
+      aplicarFaixa(atual.artist, atual.title, atual.art);
 
-      window.VBViews.atualizarTocandoAgora({
-        artista: atual.artist || "—",
-        titulo: atual.title || "—",
-        capa: atual.art || "assets/img/placeholder-album.svg"
-      });
+      /* O AzuraCast também manda as últimas faixas tocadas. Aproveitamos
+         para manter a "Playlist recente" viva sem depender de ninguém
+         cadastrar nada à mão. */
+      aplicarHistorico(json.song_history, json.now_playing);
     } catch (erro) {
       /* Falha de metadados nunca derruba o áudio. Segue tocando. */
-      console.warn("Metadados indisponíveis:", erro);
+      console.warn("Metadados indisponíveis:", erro.message);
     }
   }
 
   function iniciarMetadados() {
-    if (!window.VB_CONFIG.nowPlayingUrl) return;
-    buscarFaixaAtual();
-    timerMetadados = setInterval(buscarFaixaAtual, window.VB_CONFIG.nowPlayingInterval);
+    const url = window.VB_CONFIG.nowPlayingUrl;
+    if (!url) return;
+
+    /* Detecta pelo formato do endereço, não pelo domínio: assim
+       funciona também atrás de proxy ou domínio próprio. */
+    const ehFluxoContinuo =
+      url.includes("/mounts/metadata/subscribe") || url.includes("api.zeno.fm");
+
+    if (ehFluxoContinuo) {
+      escutarSSE(url);
+      return;
+    }
+
+    consultarJSON(url);
+    timerMetadados = setInterval(
+      () => consultarJSON(url),
+      window.VB_CONFIG.nowPlayingInterval
+    );
   }
 
   /* ---- ligações ---- */
