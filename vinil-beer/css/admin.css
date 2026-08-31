@@ -390,3 +390,64 @@
 @media (prefers-reduced-motion: reduce) {
   .modal__caixa { animation: none; }
 }
+
+/* ---------- RESUMO ----------
+   O painel abria direto numa lista, sem dizer o que precisa de
+   atenção. Estes números respondem isso antes de qualquer clique. */
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.resumo__item {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.resumo__numero {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bone);
+}
+.resumo__rotulo {
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ash-dim);
+}
+
+/* Pendências ganham destaque: é o que exige ação hoje. */
+.resumo__item--atencao {
+  border-color: rgba(229, 72, 77, .45);
+  background: rgba(229, 72, 77, .06);
+}
+.resumo__item--atencao .resumo__numero { color: var(--live); }
+
+/* ---------- ESTADO VAZIO COM ORIENTAÇÃO ---------- */
+.vazio {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 40px 24px;
+}
+.vazio strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.vazio span {
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ash-dim);
+}

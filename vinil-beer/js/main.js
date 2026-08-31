@@ -119,6 +119,11 @@
   document.addEventListener("DOMContentLoaded", async () => {
     document.body.classList.add("carregando");
 
+    /* Esqueleto primeiro: o visitante vê a estrutura da página
+       imediatamente, em vez de uma tela em branco. */
+    window.VBViews.montarOndas();
+    window.VBViews.montarEsqueletos();
+
     try {
       const { origem } = await window.VBApi.carregar();
       console.info("Dados carregados de:", origem);
@@ -128,7 +133,6 @@
 
     document.body.classList.remove("carregando");
 
-    window.VBViews.montarOndas();
     window.VBViews.montarHome();
     window.VBViews.montarPaginasFixas();
 

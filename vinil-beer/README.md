@@ -137,6 +137,18 @@ Tocando agora: https://demo.azuracast.com/api/nowplaying/1
 
 É banda de terceiros, destinada a avaliação. Use para testar e **apague os campos depois** — não deixe no ar.
 
+## Sistema de streaming próprio (planejado)
+
+Arquitetura: **rádio sincronizada**, sem servidor de áudio. A grade fica no banco como linha do tempo; o navegador de cada ouvinte calcula qual faixa deve estar tocando e em que segundo, e busca o arquivo direto da nuvem. Todos fazem a mesma conta e ouvem a mesma coisa.
+
+**Tabelas a criar:** `acervo` (arquivos + duração), `blocos` (agrupamentos), `bloco_faixas` (ordem), `grade_slots` (dias e horários).
+
+**Armazenamento:** Cloudflare R2 — US$ 0,015/GB e **tráfego de saída gratuito**. Cerca de 60 GB para 10 mil músicas dá menos de US$ 1/mês, mesmo com 500 ouvintes simultâneos.
+
+**Limitações aceitas:** não há programa ao vivo, os arquivos ficam tecnicamente baixáveis, e a rádio só toca dentro do site (sem endereço para TuneIn ou apps de carro).
+
+**A duração de cada faixa é obrigatória** — é ela que faz a sincronia funcionar.
+
 ## O que falta
 
 1. **Stream de áudio.** Sem ele o botão de play aparece desabilitado com o aviso "Stream ainda não configurado" — nada quebra. Quando o serviço for escolhido, preencha `streamUrl` em `js/config.js`.

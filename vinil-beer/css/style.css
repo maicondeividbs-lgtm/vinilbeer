@@ -1409,3 +1409,96 @@ textarea.input { resize: vertical; min-height: 96px; }
   .social svg *,
   .about__mug * { transition: none; }
 }
+
+/* =========================================================
+   22. ESTADOS DE CARREGAMENTO E VAZIO
+   Hoje a página fica em branco enquanto o banco responde, e
+   listas vazias não explicam nada. Os dois casos são os que
+   mais fazem um site parecer amador.
+   ========================================================= */
+
+/* ---- 22.1 Esqueleto ----
+   Ocupa o mesmo espaço que o conteúdo real vai ocupar, para a
+   página não pular quando os dados chegarem. */
+@keyframes brilho {
+  to { background-position: 200% 0; }
+}
+
+.osso {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface-2) 40%,
+    var(--surface) 80%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: brilho 1.4s ease-in-out infinite;
+}
+
+.osso--capa   { aspect-ratio: 4 / 3; width: 100%; border-radius: 0; }
+.osso--titulo { height: 15px; width: 72%; margin-bottom: 9px; }
+.osso--linha  { height: 11px; width: 45%; margin-bottom: 6px; }
+.osso--curta  { width: 32%; }
+
+.esqueleto-programa {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.esqueleto-programa .card-program__body { padding: 14px; }
+
+.esqueleto-faixa {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-block: 12px;
+  border-bottom: 1px solid rgba(242, 183, 5, .06);
+}
+.esqueleto-faixa .osso--disco {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.esqueleto-faixa .osso--texto { height: 12px; flex: 1; }
+
+/* Movimento reduzido: o esqueleto fica parado, mas continua
+   reservando o espaço — que é a função principal dele. */
+@media (prefers-reduced-motion: reduce) {
+  .osso { animation: none; }
+}
+
+/* ---- 22.2 Estado vazio ----
+   Lista vazia sem explicação parece defeito. Com uma frase, vira
+   informação. */
+/* Dentro do carrossel o vazio é filho de flex, não de grade —
+   sem isto ele encolhe para a largura de um cartão. */
+.carousel__track .nada { flex: 1; }
+
+.nada {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 40px 24px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+.nada__icone {
+  width: 30px; height: 30px;
+  color: var(--gold-dim);
+}
+.nada__titulo {
+  font-family: var(--font-display);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--ash);
+}
+.nada__texto {
+  max-width: 300px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ash-dim);
+}

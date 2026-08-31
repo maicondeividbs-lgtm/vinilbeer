@@ -133,7 +133,8 @@
   function desenharProgramas() {
     const alvo = $("#lista-programas");
     if (!dados.programas.length) {
-      alvo.innerHTML = '<p class="vazio">Nenhum programa cadastrado ainda.</p>';
+      alvo.innerHTML = '<div class="vazio"><strong>Nenhum programa</strong>' +
+        '<span>Use o botão “Novo programa” para montar a grade. Ela aparece na home assim que existir.</span></div>';
       return;
     }
 
@@ -156,7 +157,8 @@
   function desenharResenhas() {
     const alvo = $("#lista-resenhas");
     if (!dados.resenhas.length) {
-      alvo.innerHTML = '<p class="vazio">Nenhuma resenha ainda.</p>';
+      alvo.innerHTML = '<div class="vazio"><strong>Nenhuma resenha</strong>' +
+        '<span>Resenhas ficam como rascunho até você publicar. Só as publicadas aparecem no site.</span></div>';
       return;
     }
 
@@ -183,7 +185,8 @@
   function desenharPlaylist() {
     const alvo = $("#lista-playlist");
     if (!dados.playlist.length) {
-      alvo.innerHTML = '<p class="vazio">Nenhuma faixa registrada.</p>';
+      alvo.innerHTML = '<div class="vazio"><strong>Nenhuma faixa</strong>' +
+        '<span>Quando o serviço de streaming enviar os dados, esta lista se preenche sozinha.</span></div>';
       return;
     }
 
@@ -211,7 +214,8 @@
     contador.hidden = pendentes === 0;
 
     if (!lista.length) {
-      alvo.innerHTML = `<p class="vazio">Nenhum recado ${esc(filtroRecados)}.</p>`;
+      alvo.innerHTML = `<div class="vazio"><strong>Nenhum recado ${esc(filtroRecados)}</strong>` +
+        '<span>Os recados chegam pela página de contato do site e ficam pendentes até alguém decidir.</span></div>';
       return;
     }
 
@@ -227,6 +231,29 @@
           ${r.status !== "recusado" ? `<button class="acao acao--perigo" type="button" data-moderar="recusado" data-id="${r.id}">Recusar</button>` : ""}
         </div>
       </article>`).join("");
+  }
+
+  /* O painel abre respondendo "o que precisa de mim hoje?" antes
+     de qualquer clique. Pendências ficam em vermelho. */
+  function desenharResumo() {
+    const pendentes = dados.recados.filter((r) => r.status === "pendente").length;
+    const rascunhos = dados.resenhas.filter((r) => !r.publicada_em).length;
+    const ativos    = dados.programas.filter((p) => p.ativo).length;
+    const semStream = !(dados.config && dados.config.stream_url);
+
+    const itens = [
+      { numero: ativos, rotulo: "Programas no ar" },
+      { numero: dados.playlist.length, rotulo: "Faixas registradas" },
+      { numero: rascunhos, rotulo: "Resenhas em rascunho", atencao: rascunhos > 0 },
+      { numero: pendentes, rotulo: "Recados a moderar", atencao: pendentes > 0 },
+      { numero: semStream ? "—" : "ok", rotulo: "Stream configurado", atencao: semStream }
+    ];
+
+    document.getElementById("resumo").innerHTML = itens.map((i) => `
+      <li class="resumo__item${i.atencao ? " resumo__item--atencao" : ""}">
+        <p class="resumo__numero">${esc(i.numero)}</p>
+        <p class="resumo__rotulo">${esc(i.rotulo)}</p>
+      </li>`).join("");
   }
 
   function preencherConfig() {
@@ -254,6 +281,7 @@
 
     dados = { programas, resenhas, playlist, recados, config: config[0] || null };
 
+    desenharResumo();
     desenharProgramas();
     desenharResenhas();
     desenharPlaylist();

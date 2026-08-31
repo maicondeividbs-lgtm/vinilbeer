@@ -148,17 +148,68 @@ window.VBViews = (function () {
       </li>`;
   }
 
+  /* ---- esqueletos ----
+     Desenhados antes de consultar o banco. Ocupam exatamente o
+     espaço do conteúdo real, então a página não pula quando os
+     dados chegam. */
+  function montarEsqueletos() {
+    const cartao = `
+      <li class="carousel__item">
+        <div class="esqueleto-programa">
+          <div class="osso osso--capa"></div>
+          <div class="card-program__body">
+            <div class="osso osso--titulo"></div>
+            <div class="osso osso--linha"></div>
+            <div class="osso osso--linha osso--curta"></div>
+          </div>
+        </div>
+      </li>`;
+
+    const faixa = `
+      <li class="esqueleto-faixa">
+        <div class="osso osso--disco"></div>
+        <div class="osso osso--texto"></div>
+      </li>`;
+
+    const alvo = (id, html, vezes) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html.repeat(vezes);
+    };
+
+    alvo("programas-home", cartao, 4);
+    alvo("playlist-home", faixa, 5);
+  }
+
+  /* ---- estado vazio ---- */
+  function nada(titulo, texto) {
+    return `
+      <li class="nada" style="grid-column:1/-1">
+        <svg class="nada__icone" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <p class="nada__titulo">${esc(titulo)}</p>
+        <p class="nada__texto">${esc(texto)}</p>
+      </li>`;
+  }
+
   /* ---- montagem inicial (roda uma vez) ---- */
 
   function montarHome() {
     document.getElementById("programas-home").innerHTML =
-      D().programas.map((p) => `<li class="carousel__item">${cartaoPrograma(p)}</li>`).join("");
+      D().programas.length
+        ? D().programas.map((p) => `<li class="carousel__item">${cartaoPrograma(p)}</li>`).join("")
+        : nada("Sem programas", "A grade ainda não foi cadastrada no painel.");
 
     document.getElementById("playlist-home").innerHTML =
-      D().playlist.slice(0, 5).map(itemPlaylist).join("");
+      D().playlist.length
+        ? D().playlist.slice(0, 5).map(itemPlaylist).join("")
+        : nada("Nada tocou ainda", "As faixas aparecem aqui assim que a rádio entrar no ar.");
 
     document.getElementById("resenhas-home").innerHTML =
-      D().resenhas.map(cartaoResenha).join("");
+      D().resenhas.length
+        ? D().resenhas.map(cartaoResenha).join("")
+        : nada("Sem resenhas", "As publicações aparecem aqui quando forem ao ar.");
 
     document.getElementById("features").innerHTML = D().destaques.map((d) => `
       <li class="feature">
@@ -279,6 +330,7 @@ window.VBViews = (function () {
   }
 
   return {
+    montarEsqueletos,
     montarHome,
     remontarPlaylists,
     montarPaginasFixas,
